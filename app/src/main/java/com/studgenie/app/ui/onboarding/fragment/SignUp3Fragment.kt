@@ -162,7 +162,7 @@ class SignUp3Fragment : Fragment() {
                                             })
                                             activity?.finish()
                                         } else {
-                                            userViewModel.update(response.body()?.get(0)?.user_name.toString(),response.body()?.get(0)?.email.toString(),1)
+                                            userViewModel.update(response.body()?.get(0)?.number.toString(),response.body()?.get(0)?.user_name.toString(),response.body()?.get(0)?.email.toString(),1)
                                             Log.d("Coroutine1", "Successfully updated!")
 
                                             val i = Intent(activity, HomeActivity::class.java)
@@ -185,7 +185,7 @@ class SignUp3Fragment : Fragment() {
                             }
                         }else{
                             toastMessage.visibility = View.VISIBLE
-                            toastMessage.text = "Password not matched"
+                            toastMessage.text = "Password did not match"
                             toastMessage.setBackgroundResource(R.color.transparent_red)
                         }
                     }else{

@@ -14,4 +14,8 @@ interface SignUpApi {
 
     @POST("/students/createdetails")
     fun userDetails( @Body details:SendUserDetails): Call<List<UserDetailsApiResponse>>
+
+    @POST("/students/otpSignIn")
+    fun userSignin(@Body number:SendNumber):Call<SigninApiResponse>
+
 }

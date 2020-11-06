@@ -34,9 +34,9 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun update(username:String,email:String,pid:Int){
+    fun update(number:String,username:String,email:String,pid:Int){
         viewModelScope.launch(Dispatchers.IO) {
-            repository?.update(username, email, pid)
+            repository?.update(number,username, email, pid)
         }
     }
 }

@@ -13,7 +13,7 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun updateUserdata(userData: UserData){
         userDao.updateUserdata(userData)
     }
-    suspend fun update(username:String,email:String,pid:Int){
-        userDao.update(username,email,pid)
+    suspend fun update(number:String,username:String,email:String,pid:Int){
+        userDao.update(number,username,email,pid)
     }
 }

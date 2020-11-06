@@ -29,6 +29,7 @@ class SignUp1Fragment : Fragment(){
     lateinit var countryCode:String
     lateinit var toastMessage:TextView
     lateinit var exploreTextView:TextView
+    var phoneNumberLength:Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,40 +44,54 @@ class SignUp1Fragment : Fragment(){
 
         val spinner = rootView.findViewById<Spinner>(R.id.spinner_countries)
 
-        val retrofit = Retrofit.Builder()
+        if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(requireContext())) {
+            val retrofit = Retrofit.Builder()
 //            .baseUrl("http://192.168.43.217:3000")
 //            .baseUrl("http://sg-backend-dev.ap-south-1.elasticbeanstalk.com")
-            .baseUrl(Config.baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                .baseUrl(Config.baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
 
-        val api = retrofit.create(ApiCountryService::class.java)
-        api.fetchAllCountries().enqueue(object : Callback<List<CountryItem>> {
-            override fun onResponse(call: Call<List<CountryItem>>, response: Response<List<CountryItem>>) {
-                val adapter = CountrySpinnerAdapter(requireContext(),response.body() as ArrayList<CountryItem>)
-                spinner.adapter = adapter
-                Log.d("Retrofit1", "OnResponse: ${response.body()!![0].code}")
-            }
-            override fun onFailure(call: Call<List<CountryItem>>, t: Throwable) {
-                Log.d("Retrofit1", "OnFailure")
-            }
-        })
+            val api = retrofit.create(ApiCountryService::class.java)
+            api.fetchAllCountries().enqueue(object : Callback<List<CountryItem>> {
+                override fun onResponse(call: Call<List<CountryItem>>, response: Response<List<CountryItem>>) {
+                    phoneNumberLength = response.body()!![0].no_of_digits
+                    countryCode = response.body()!![0].code
 
+                    val adapter = CountrySpinnerAdapter(requireContext(),response.body() as ArrayList<CountryItem>)
+                    spinner.adapter = adapter
+                    Log.d("Retrofit1", "OnResponse: ${response.body()!![0].code}")
+                }
+                override fun onFailure(call: Call<List<CountryItem>>, t: Throwable) {
+                    Log.d("Retrofit1", "OnFailure")
+                }
+            })
+        }else {
+            toastMessage.visibility = View.VISIBLE
+            toastMessage.text = "Check Your Internet Connection"
+            toastMessage.setBackgroundResource(R.color.transparent_red)
+        }
             continueButton.setOnClickListener(View.OnClickListener {
                 if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(requireContext())) {
 
-                    val storePhoneNo = phoneNumberEditText.text.toString()
+                    val storePhoneNo = phoneNumberEditText.text.toString().trim()
                     if (storePhoneNo.matches("".toRegex())) {
                         toastMessage.visibility = View.VISIBLE
                         toastMessage.text = "Enter your number first"
                         toastMessage.setBackgroundResource(R.color.transparent_red)
                     } else {
-                        val signUp2Fragment = SignUp2Fragment()
-                        val args = Bundle()
-                        args.putString("phNo", phoneNumberEditText.text.toString())
+                        if (storePhoneNo.length == phoneNumberLength){
+                            val signUp2Fragment = SignUp2Fragment()
+                            val args = Bundle()
+                            args.putString("phNo", phoneNumberEditText.text.toString())
 //                        args.putString("isoCode", "91")
-                        signUp2Fragment.arguments = args
-                        fragmentManager!!.beginTransaction().replace(R.id.signup_fragment_container,signUp2Fragment).commit()
+                            signUp2Fragment.arguments = args
+                            fragmentManager!!.beginTransaction().replace(R.id.signup_fragment_container,signUp2Fragment).commit()
+                        }else{
+                            toastMessage.visibility = View.VISIBLE
+                            toastMessage.text = "Mobile number should be of $phoneNumberLength digits"
+                            toastMessage.setBackgroundResource(R.color.transparent_red)
+                        }
                     }
                 } else {
                     toastMessage.visibility = View.VISIBLE
