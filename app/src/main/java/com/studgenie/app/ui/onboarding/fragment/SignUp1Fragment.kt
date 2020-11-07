@@ -9,7 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.studgenie.app.R
+import com.studgenie.app.data.local.tokenDatabase.AuthViewModel
+import com.studgenie.app.data.local.userDetailsDatabase.UserViewModel
+import com.studgenie.app.data.local.userStatusDatabase.UserStatusViewModel
 import com.studgenie.app.data.remote.ApiCountryService
 import com.studgenie.app.util.InternetConnectivity
 import com.studgenie.app.data.model.CountryItem
@@ -21,9 +25,16 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import androidx.lifecycle.Observer
+import com.studgenie.app.data.local.userStatusDatabase.UserStatus
 
 @Suppress("DEPRECATION")
 class SignUp1Fragment : Fragment(){
+
+    private lateinit var statusViewModel:UserStatusViewModel
+    var isStatusEmpty = 1
+
+
     lateinit var phoneNumberEditText:EditText
     lateinit var continueButton:Button
     lateinit var countryCode:String
@@ -35,6 +46,7 @@ class SignUp1Fragment : Fragment(){
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        statusViewModel = ViewModelProvider(requireActivity()).get(UserStatusViewModel::class.java)
 
         val rootView: View = inflater.inflate(R.layout.fragment_sign_up_1, container, false)
         phoneNumberEditText = rootView.findViewById(R.id.edit_text_phone)
@@ -43,6 +55,16 @@ class SignUp1Fragment : Fragment(){
         exploreTextView = rootView.findViewById<TextView>(R.id.textView_explore)
 
         val spinner = rootView.findViewById<Spinner>(R.id.spinner_countries)
+
+        statusViewModel.readAllData?.observe(viewLifecycleOwner, Observer{ status->
+            if (status.isEmpty()){
+                isStatusEmpty = 1
+                Log.d("Coroutine2","List is empty")
+            }else{
+                isStatusEmpty = 0
+                Log.d("Coroutine2",status[0].id.toString()+status[0].status)
+            }
+        })
 
         if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(requireContext())) {
             val retrofit = Retrofit.Builder()
@@ -60,10 +82,13 @@ class SignUp1Fragment : Fragment(){
 
                     val adapter = CountrySpinnerAdapter(requireContext(),response.body() as ArrayList<CountryItem>)
                     spinner.adapter = adapter
-                    Log.d("Retrofit1", "OnResponse: ${response.body()!![0].code}")
+                    Log.d("RetrofitCountryService", "OnResponse: ${response.body()!![0].code}")
                 }
                 override fun onFailure(call: Call<List<CountryItem>>, t: Throwable) {
-                    Log.d("Retrofit1", "OnFailure")
+                    Log.d("RetrofitCountryService", "OnFailure")
+                    toastMessage.visibility = View.VISIBLE
+                    toastMessage.text = "Try after some time "
+                    toastMessage.setBackgroundResource(R.color.transparent_red)
                 }
             })
         }else {
@@ -80,16 +105,31 @@ class SignUp1Fragment : Fragment(){
                         toastMessage.text = "Enter your number first"
                         toastMessage.setBackgroundResource(R.color.transparent_red)
                     } else {
-                        if (storePhoneNo.length == phoneNumberLength){
-                            val signUp2Fragment = SignUp2Fragment()
-                            val args = Bundle()
-                            args.putString("phNo", phoneNumberEditText.text.toString())
-//                        args.putString("isoCode", "91")
-                            signUp2Fragment.arguments = args
-                            fragmentManager!!.beginTransaction().replace(R.id.signup_fragment_container,signUp2Fragment).commit()
+                        if(InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(requireContext())){
+                            if (storePhoneNo.length == phoneNumberLength){
+
+                                val status = UserStatus("User Entered")
+                                if (isStatusEmpty == 1){
+                                    statusViewModel.addUserStatus(status)
+                                    Log.d("Coroutine2","Successfully added!")
+                                }else{
+                                    statusViewModel.update("second time",1)
+                                    Log.d("Coroutine2","Successfully updated!")
+                                }
+
+                                val signUp2Fragment = SignUp2Fragment()
+                                val args = Bundle()
+                                args.putString("phNo", phoneNumberEditText.text.toString())
+                                signUp2Fragment.arguments = args
+                                fragmentManager!!.beginTransaction().replace(R.id.signup_fragment_container,signUp2Fragment).commit()
+                            }else{
+                                toastMessage.visibility = View.VISIBLE
+                                toastMessage.text = "Mobile number should be of $phoneNumberLength digits"
+                                toastMessage.setBackgroundResource(R.color.transparent_red)
+                            }
                         }else{
                             toastMessage.visibility = View.VISIBLE
-                            toastMessage.text = "Mobile number should be of $phoneNumberLength digits"
+                            toastMessage.text = "Check Your Internet Connection"
                             toastMessage.setBackgroundResource(R.color.transparent_red)
                         }
                     }
@@ -100,6 +140,15 @@ class SignUp1Fragment : Fragment(){
                 }
             })
         exploreTextView.setOnClickListener {
+            val status = UserStatus("User Entered")
+            if (isStatusEmpty == 1){
+                statusViewModel.addUserStatus(status)
+                Log.d("Coroutine2","Successfully added!")
+            }else{
+                statusViewModel.update("second time",1)
+                Log.d("Coroutine2","Successfully updated!")
+            }
+
             val i = Intent(activity, HomeActivity::class.java)
             startActivity(i)
             (activity as Activity?)!!.overridePendingTransition(0, 0)

@@ -7,7 +7,7 @@
         android:id="@+id/selected_flag"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/flag_india"
+
         />
 <!--    android:background="@drawable/img"-->
     <TextView

@@ -36,4 +36,10 @@ class AuthViewModel(application: Application):AndroidViewModel(application) {
             repository?.update(token, pid)
         }
     }
+
+    fun deleteAuthToken(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository?.deleteAuthToken()
+        }
+    }
 }

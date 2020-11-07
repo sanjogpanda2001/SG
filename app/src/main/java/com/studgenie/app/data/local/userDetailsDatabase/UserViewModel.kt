@@ -39,4 +39,10 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
             repository?.update(number,username, email, pid)
         }
     }
+
+    fun deleteUserData(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository?.deleteUserData()
+        }
+    }
 }

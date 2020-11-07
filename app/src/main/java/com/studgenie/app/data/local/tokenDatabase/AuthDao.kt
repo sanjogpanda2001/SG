@@ -1,10 +1,7 @@
 package com.studgenie.app.data.local.tokenDatabase
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface AuthDao{
@@ -19,4 +16,7 @@ interface AuthDao{
 
     @Query("SELECT * FROM AuthToken ORDER BY id DESC")
     fun getAuthToken(): LiveData<List<AuthToken>>
+
+    @Query("DELETE FROM AuthToken")
+    suspend fun deleteAuthToken()
 }

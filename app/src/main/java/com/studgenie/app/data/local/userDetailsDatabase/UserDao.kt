@@ -1,10 +1,7 @@
 package com.studgenie.app.data.local.userDetailsDatabase
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface UserDao {
@@ -19,4 +16,8 @@ interface UserDao {
 
     @Query("SELECT * FROM UserData ORDER BY id DESC")
     fun getUserData(): LiveData<List<UserData>>
+
+
+    @Query("DELETE FROM UserData")
+    suspend fun deleteUserData()
 }

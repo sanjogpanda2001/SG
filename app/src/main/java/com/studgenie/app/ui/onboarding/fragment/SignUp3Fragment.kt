@@ -36,6 +36,8 @@ class SignUp3Fragment : Fragment() {
     private lateinit var userViewModel: UserViewModel
     var isTokenEmpty = 1
     var isUserEmpty:Int = 1
+    var storeAuthTokenId = 1
+    var storeUserId = 1
 
     lateinit var enterNameString: String
     lateinit var enterEmailString: String
@@ -77,6 +79,7 @@ class SignUp3Fragment : Fragment() {
                 }else{
                     isTokenEmpty = 0
                     Log.d("Coroutine",auth[0].id.toString()+auth[0].authToken)
+                    storeAuthTokenId = auth[0].id
                     authToken = auth[0].authToken
                 }
         })
@@ -87,6 +90,7 @@ class SignUp3Fragment : Fragment() {
                 Log.d("Coroutine1","List is empty")
             }else{
                 isUserEmpty = 0
+                storeUserId = user[0].id
                 Log.d("Coroutine1",user[0].id.toString()+user[0].number)
             }
         })
@@ -103,7 +107,7 @@ class SignUp3Fragment : Fragment() {
             if (!enterNameString.isEmpty() && !enterEmailString.isEmpty() && !enterPasswordString.isEmpty()){
 
                 if (enterEmailString.isValidEmail()){
-                    if (enterPasswordString.length in 6..10){
+                    if (enterPasswordString.length >= 8){
                         if (enterPasswordString.equals(enterConfirmPasswordString)){
                             toastMessage.visibility = View.INVISIBLE
 
@@ -121,12 +125,9 @@ class SignUp3Fragment : Fragment() {
 //                        val sendDetails = SendUserDetails("aaaaaa","aa@bb","12345","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJudW1iZXIiOiI3OTkyOTgyMDM4IiwiaWF0IjoxNjAzODA5MTI2fQ.XyVd0uiTLCDFRHu3dwu4SsyUEes35Vzxb-QjMiROYV0")
                                 createDetailsApi.userDetails(sendDetails).enqueue(object :
                                     Callback<List<UserDetailsApiResponse>> {
-                                    override fun onResponse(
-                                        call: Call<List<UserDetailsApiResponse>>,
-                                        response: Response<List<UserDetailsApiResponse>>
-                                    ) {
+                                    override fun onResponse(call: Call<List<UserDetailsApiResponse>>,response: Response<List<UserDetailsApiResponse>>) {
                                         Log.d(
-                                            "Retrofit3", "OnResponse: ${response.body()?.get(0)?.number} \n"
+                                            "RetrofitUserDetails", "OnResponse: ${response.body()?.get(0)?.number} \n"
                                                     + "Response Code: ${response.code()}\n"
                                         )
                                         val mUserData = UserData(
@@ -155,14 +156,14 @@ class SignUp3Fragment : Fragment() {
                                             userViewModel.readAllData?.observe(viewLifecycleOwner, Observer { user ->
                                                 if(!user.isEmpty()){
                                                     Log.d("Coroutine1", user[0].id.toString() + user[0].number.toString() + user[0].firstName.toString() + user[0].lastName.toString() + user[0].dob.toString() + user[0].pictureUrl.toString() + user[0].accountStatus.toString() + user[0].maxDevices.toString() + user[0].userName.toString() + user[0].studentId.toString() + user[0].instituteId.toString() + user[0].email.toString())
-                                                    Toast.makeText(requireContext(),user[0].id.toString() + user[0].number.toString() + user[0].firstName.toString() + user[0].lastName.toString() + user[0].dob.toString() + user[0].pictureUrl.toString() + user[0].accountStatus.toString() + user[0].maxDevices.toString() + user[0].userName.toString() + user[0].studentId.toString() + user[0].instituteId.toString() + user[0].email.toString() , Toast.LENGTH_SHORT).show()
+//                                                    Toast.makeText(requireContext(),user[0].id.toString() + user[0].number.toString() + user[0].firstName.toString() + user[0].lastName.toString() + user[0].dob.toString() + user[0].pictureUrl.toString() + user[0].accountStatus.toString() + user[0].maxDevices.toString() + user[0].userName.toString() + user[0].studentId.toString() + user[0].instituteId.toString() + user[0].email.toString() , Toast.LENGTH_SHORT).show()
                                                 }else{
                                                     Log.d("Coroutine1","User Data Not added")
                                                 }
                                             })
                                             activity?.finish()
                                         } else {
-                                            userViewModel.update(response.body()?.get(0)?.number.toString(),response.body()?.get(0)?.user_name.toString(),response.body()?.get(0)?.email.toString(),1)
+                                            userViewModel.update(response.body()?.get(0)?.number.toString(),response.body()?.get(0)?.user_name.toString(),response.body()?.get(0)?.email.toString(),storeUserId)
                                             Log.d("Coroutine1", "Successfully updated!")
 
                                             val i = Intent(activity, HomeActivity::class.java)
@@ -170,14 +171,16 @@ class SignUp3Fragment : Fragment() {
                                             (activity as Activity?)!!.overridePendingTransition(0, 0)
                                             userViewModel.readAllData?.observe(viewLifecycleOwner, Observer { user ->
                                                 Log.d("Coroutine1", user[0].id.toString() + user[0].number.toString() + user[0].firstName.toString() + user[0].lastName.toString() + user[0].dob.toString() + user[0].pictureUrl.toString() + user[0].accountStatus.toString() + user[0].maxDevices.toString() + user[0].userName.toString() + user[0].studentId.toString() + user[0].instituteId.toString() + user[0].email.toString())
-                                                Toast.makeText(requireContext(),user[0].id.toString() + user[0].number.toString() + user[0].firstName.toString() + user[0].lastName.toString() + user[0].dob.toString() + user[0].pictureUrl.toString() + user[0].accountStatus.toString() + user[0].maxDevices.toString() + user[0].userName.toString() + user[0].studentId.toString() + user[0].instituteId.toString() + user[0].email.toString() , Toast.LENGTH_SHORT).show()
+//                                                Toast.makeText(requireContext(),user[0].id.toString() + user[0].number.toString() + user[0].firstName.toString() + user[0].lastName.toString() + user[0].dob.toString() + user[0].pictureUrl.toString() + user[0].accountStatus.toString() + user[0].maxDevices.toString() + user[0].userName.toString() + user[0].studentId.toString() + user[0].instituteId.toString() + user[0].email.toString() , Toast.LENGTH_SHORT).show()
                                             })
-
                                             activity?.finish()
                                         }
                                     }
                                     override fun onFailure(call: Call<List<UserDetailsApiResponse>>, t: Throwable) {
-                                        Log.d("Retrofit3", "OnFailure \n"+ "Response Code:" + t.message + "\n" + t.cause + "\n" + t.printStackTrace().toString())
+                                        Log.d("RetrofitUserDetails", "OnFailure \n"+ "Response Code:" + t.message + "\n" + t.cause + "\n" + t.printStackTrace().toString())
+                                        toastMessage.visibility = View.VISIBLE
+                                        toastMessage.text = "Try after some time "
+                                        toastMessage.setBackgroundResource(R.color.transparent_red)
                                     }
                                 })
                             }else{
@@ -190,7 +193,7 @@ class SignUp3Fragment : Fragment() {
                         }
                     }else{
                         toastMessage.visibility = View.VISIBLE
-                        toastMessage.text = "Password length should be between 6-10"
+                        toastMessage.text = "Minimum password length should be 8"
                         toastMessage.setBackgroundResource(R.color.transparent_red)
                     }
                 }else{
