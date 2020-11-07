@@ -189,10 +189,7 @@ class SignUp3Fragment : Fragment() {
 
                                             val i = Intent(activity, HomeActivity::class.java)
                                             startActivity(i)
-                                            (activity as Activity?)!!.overridePendingTransition(
-                                                0,
-                                                0
-                                            )
+                                            (activity as Activity?)!!.overridePendingTransition(0,0)
                                             userViewModel.readAllData?.observe(
                                                 viewLifecycleOwner,
                                                 Observer { user ->

@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.studgenie.app.data.local.tokenDatabase.AuthViewModel
 import com.studgenie.app.data.local.userDetailsDatabase.UserViewModel
 import com.studgenie.app.data.local.userStatusDatabase.UserStatusViewModel
+import com.studgenie.app.ui.main.activity.HomeActivity
 
 class HomeFragment : Fragment() {
     private lateinit var authViewModel: AuthViewModel
@@ -72,9 +73,6 @@ class HomeFragment : Fragment() {
             activity?.finish()
         }
         rootView.button_logout.setOnClickListener {
-//            if (isTokenEmpty==1){
-//                Toast.makeText(requireContext(), "Login first", Toast.LENGTH_SHORT).show()
-//            }else{
             authViewModel.deleteAuthToken()
             Log.d("CoroutineAuth", "Successfully deleted")
             userViewModel.deleteUserData()
@@ -82,7 +80,12 @@ class HomeFragment : Fragment() {
             statusViewModel.deleteStatusData()
             Log.d("CoroutineStatus", "Successfully deleted")
             Toast.makeText(requireContext(), "Successfully Logged out", Toast.LENGTH_SHORT).show()
-//            }
+
+            val intent = Intent(activity, SignUpActivity::class.java)
+            startActivity(intent)
+            (activity as Activity?)!!.overridePendingTransition(0,0)
+            activity?.finish()
+
         }
         userViewModel.readAllData?.observe(viewLifecycleOwner, Observer { user ->
             if (user.isEmpty()) {
