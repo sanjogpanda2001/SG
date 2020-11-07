@@ -1,4 +1,4 @@
-package com.studgenie.app.data.remote
+package com.studgenie.app.data.remote.request
 
 import com.studgenie.app.data.model.CountryItem
 import retrofit2.Call

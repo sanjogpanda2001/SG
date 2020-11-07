@@ -9,18 +9,19 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-
-@Database(entities = [UserStatus ::class],version = 3,exportSchema = false)
-abstract class UserStatusDatabase: RoomDatabase() {
+@Database(entities = [UserStatus::class], version = 3, exportSchema = false)
+abstract class UserStatusDatabase : RoomDatabase() {
     abstract fun getUserStatusDao(): UserStatusDao
-    companion object{
-        @Volatile private var INSTANCE: UserStatusDatabase?=null
+
+    companion object {
+        @Volatile
+        private var INSTANCE: UserStatusDatabase? = null
         fun getUserStatusDatabase(context: Context): UserStatusDatabase {
             val tempInstance = INSTANCE
-            if(tempInstance != null){
+            if (tempInstance != null) {
                 return tempInstance
             }
-            synchronized(this){
+            synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     UserStatusDatabase::class.java,

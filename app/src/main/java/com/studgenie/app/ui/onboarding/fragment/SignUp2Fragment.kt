@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -26,13 +25,13 @@ import com.msg91.sendotpandroid.library.roots.SendOTPConfigBuilder
 import com.msg91.sendotpandroid.library.roots.SendOTPResponseCode
 import com.studgenie.app.R
 import com.studgenie.app.data.model.SendNumber
-import com.studgenie.app.data.remote.SignUpApiResponse
-import com.studgenie.app.data.remote.SignUpApi
+import com.studgenie.app.data.remote.response.SignUpApiResponse
+import com.studgenie.app.data.remote.request.SignUpApi
 import com.studgenie.app.data.local.tokenDatabase.AuthToken
 import com.studgenie.app.data.local.tokenDatabase.AuthViewModel
 import com.studgenie.app.data.local.userDetailsDatabase.UserData
 import com.studgenie.app.data.local.userDetailsDatabase.UserViewModel
-import com.studgenie.app.data.remote.SigninApiResponse
+import com.studgenie.app.data.remote.response.SigninApiResponse
 
 import com.studgenie.app.util.InternetConnectivity
 import com.studgenie.app.ui.common.OtpEditText
@@ -76,12 +75,12 @@ class SignUp2Fragment : Fragment(), VerificationListener {
         val rootView = inflater.inflate(R.layout.fragment_sign_up_2, container, false)
         if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(requireContext())){
 
-            verifyAndProceedButton = rootView.findViewById(R.id.verify_proceed) as Button
+            verifyAndProceedButton = rootView.findViewById(R.id.verify_proceed_button) as Button
             otpTimer = rootView.findViewById<View>(R.id.timer) as TextView
             reSendOtpButton = rootView.findViewById(R.id.resend_otp_button) as TextView
-            enterOtpEditText = rootView.findViewById(R.id.enter_otp) as OtpEditText
+            enterOtpEditText = rootView.findViewById(R.id.enter_otp_edit_text) as OtpEditText
             toastMessage = rootView.findViewById(R.id.toast_message_during_signup) as TextView
-            backArrow = rootView.findViewById(R.id.back_arrow) as Button
+            backArrow = rootView.findViewById(R.id.back_arrow_button) as Button
 
             startTimer()
             reSendOtpButton.setOnClickListener { resendCode() }

@@ -32,31 +32,37 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView =inflater.inflate(R.layout.fragment_home, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_home, container, false)
 
 
         authViewModel = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
         userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
         statusViewModel = ViewModelProvider(requireActivity()).get(UserStatusViewModel::class.java)
 
-        authViewModel.readAllData?.observe(viewLifecycleOwner, Observer{ auth->
-            if (auth.isEmpty()){
-                isTokenEmpty=1
-                Log.d("CoroutineHomeFragAuth","List is empty")
-            }else{
-                isTokenEmpty=0
-                Log.d("CoroutineHomeFragAuth",auth[0].id.toString()+auth[0].authToken)
-                Log.d("CoroutineHomeFragAuthR",auth[auth.size-1].id.toString()+auth[auth.size-1].authToken)
+        authViewModel.readAllData?.observe(viewLifecycleOwner, Observer { auth ->
+            if (auth.isEmpty()) {
+                isTokenEmpty = 1
+                Log.d("CoroutineHomeFragAuth", "List is empty")
+            } else {
+                isTokenEmpty = 0
+                Log.d("CoroutineHomeFragAuth", auth[0].id.toString() + auth[0].authToken)
+                Log.d(
+                    "CoroutineHomeFragAuthR",
+                    auth[auth.size - 1].id.toString() + auth[auth.size - 1].authToken
+                )
             }
         })
-        userViewModel.readAllData?.observe(viewLifecycleOwner, Observer{ user->
-            if (user.isEmpty()){
-                isUserEmpty=1
-                Log.d("CoroutineHomFragUserDat","List is empty")
-            }else{
-                isUserEmpty=0
-                Log.d("CoroutineHomFragUserDat",user[0].id.toString()+user[0].number)
-                Log.d("CoroutineHomFragUserDaR",user[user.size-1].id.toString()+user[user.size-1].number)
+        userViewModel.readAllData?.observe(viewLifecycleOwner, Observer { user ->
+            if (user.isEmpty()) {
+                isUserEmpty = 1
+                Log.d("CoroutineHomFragUserDat", "List is empty")
+            } else {
+                isUserEmpty = 0
+                Log.d("CoroutineHomFragUserDat", user[0].id.toString() + user[0].number)
+                Log.d(
+                    "CoroutineHomFragUserDaR",
+                    user[user.size - 1].id.toString() + user[user.size - 1].number
+                )
             }
         })
         rootView.update_details_button.setOnClickListener {
@@ -69,23 +75,30 @@ class HomeFragment : Fragment() {
 //            if (isTokenEmpty==1){
 //                Toast.makeText(requireContext(), "Login first", Toast.LENGTH_SHORT).show()
 //            }else{
-                authViewModel.deleteAuthToken()
-                Log.d("CoroutineAuth","Successfully deleted")
-                userViewModel.deleteUserData()
-                Log.d("CoroutineUserData","Successfully deleted")
-                statusViewModel.deleteStatusData()
-                Log.d("CoroutineStatus","Successfully deleted")
-                Toast.makeText(requireContext(), "Successfully Logged out", Toast.LENGTH_SHORT).show()
+            authViewModel.deleteAuthToken()
+            Log.d("CoroutineAuth", "Successfully deleted")
+            userViewModel.deleteUserData()
+            Log.d("CoroutineUserData", "Successfully deleted")
+            statusViewModel.deleteStatusData()
+            Log.d("CoroutineStatus", "Successfully deleted")
+            Toast.makeText(requireContext(), "Successfully Logged out", Toast.LENGTH_SHORT).show()
 //            }
         }
-                userViewModel.readAllData?.observe(viewLifecycleOwner, Observer { user ->
-                    if (user.isEmpty()){
-                        Log.d("HomeFragment","User not created yet")
-                    }else{
-                        Log.d("CoroutineUserData", user[0].id.toString() + user[0].number.toString() + user[0].firstName.toString() + user[0].lastName.toString() + user[0].dob.toString() + user[0].pictureUrl.toString() + user[0].accountStatus.toString() + user[0].maxDevices.toString() + user[0].userName.toString() + user[0].studentId.toString() + user[0].instituteId.toString() + user[0].email.toString())
-                        Toast.makeText(requireContext(),user[0].id.toString() + user[0].number.toString() + user[0].firstName.toString() + user[0].lastName.toString() + user[0].dob.toString() + user[0].pictureUrl.toString() + user[0].accountStatus.toString() + user[0].maxDevices.toString() + user[0].userName.toString() + user[0].studentId.toString() + user[0].instituteId.toString() + user[0].email.toString() , Toast.LENGTH_SHORT).show()
-                    }
-                })
-       return rootView
+        userViewModel.readAllData?.observe(viewLifecycleOwner, Observer { user ->
+            if (user.isEmpty()) {
+                Log.d("HomeFragment", "User not created yet")
+            } else {
+                Log.d(
+                    "CoroutineUserData",
+                    user[0].id.toString() + user[0].number.toString() + user[0].firstName.toString() + user[0].lastName.toString() + user[0].dob.toString() + user[0].pictureUrl.toString() + user[0].accountStatus.toString() + user[0].maxDevices.toString() + user[0].userName.toString() + user[0].studentId.toString() + user[0].instituteId.toString() + user[0].email.toString()
+                )
+                Toast.makeText(
+                    requireContext(),
+                    user[0].id.toString() + user[0].number.toString() + user[0].firstName.toString() + user[0].lastName.toString() + user[0].dob.toString() + user[0].pictureUrl.toString() + user[0].accountStatus.toString() + user[0].maxDevices.toString() + user[0].userName.toString() + user[0].studentId.toString() + user[0].instituteId.toString() + user[0].email.toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+        return rootView
     }
 }

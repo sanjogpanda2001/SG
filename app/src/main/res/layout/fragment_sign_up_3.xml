@@ -22,7 +22,7 @@
 
 
     <TextView
-        android:id="@+id/please_enter_your_setails"
+        android:id="@+id/please_enter_your_details_textView"
         android:layout_width="290dp"
         android:layout_height="32dp"
         android:layout_marginTop="24dp"
@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@+id/studgenie_logo" />
 
     <EditText
-        android:id="@+id/enter_name"
+        android:id="@+id/enter_name_edit_text"
         android:layout_width="290dp"
         android:layout_height="48dp"
         android:layout_marginTop="32dp"
@@ -45,81 +45,81 @@
         android:hint="@string/enter_name"
         android:inputType="textPersonName"
         android:textSize="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_setails"
+        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_details_textView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/please_enter_your_setails"
+        app:layout_constraintStart_toStartOf="@+id/please_enter_your_details_textView"
         app:layout_constraintTop_toBottomOf="@+id/toast_message_3rd_signup_fragment" />
 
     <EditText
-        android:id="@+id/enter_email"
+        android:id="@+id/enter_email_edit_text"
         android:layout_width="290dp"
         android:layout_height="48dp"
         android:layout_marginTop="15dp"
-        android:inputType="textEmailAddress"
-        android:hint="@string/enter_email"
-        android:textSize="15dp"
         android:fontFamily="@font/raleway"
-        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_setails"
+        android:hint="@string/enter_email"
+        android:inputType="textEmailAddress"
+        android:textSize="15dp"
+        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_details_textView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/please_enter_your_setails"
-        app:layout_constraintTop_toBottomOf="@+id/enter_name" />
+        app:layout_constraintStart_toStartOf="@+id/please_enter_your_details_textView"
+        app:layout_constraintTop_toBottomOf="@+id/enter_name_edit_text" />
 
     <EditText
-        android:id="@+id/enter_password"
+        android:id="@+id/enter_password_edit_text"
         android:layout_width="290dp"
         android:layout_height="48dp"
         android:layout_marginTop="15dp"
-        android:inputType="textPassword"
         android:fontFamily="@font/raleway"
         android:hint="@string/enter_password"
+        android:inputType="textPassword"
         android:textSize="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_setails"
+        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_details_textView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/please_enter_your_setails"
-        app:layout_constraintTop_toBottomOf="@+id/enter_email" />
+        app:layout_constraintStart_toStartOf="@+id/please_enter_your_details_textView"
+        app:layout_constraintTop_toBottomOf="@+id/enter_email_edit_text" />
 
     <EditText
-        android:id="@+id/confirm_password"
+        android:id="@+id/confirm_password_edit_Text"
         android:layout_width="290dp"
         android:layout_height="48dp"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/raleway"
         android:hint="@string/confirm"
-        android:textSize="15dp"
         android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_setails"
+        android:textSize="15dp"
+        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_details_textView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/please_enter_your_setails"
-        app:layout_constraintTop_toBottomOf="@+id/enter_password" />
+        app:layout_constraintStart_toStartOf="@+id/please_enter_your_details_textView"
+        app:layout_constraintTop_toBottomOf="@+id/enter_password_edit_text" />
 
     <Button
         android:id="@+id/skip_button"
         android:layout_width="100dp"
         android:layout_height="35dp"
         android:layout_marginTop="56dp"
+        android:background="@drawable/curved_button1"
+        android:fontFamily="@font/poppins_medium"
         android:gravity="center"
         android:text="@string/skip"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:fontFamily="@font/poppins_medium"
-        android:background="@drawable/curved_button1"
         app:layout_constraintEnd_toStartOf="@+id/submit_button"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/please_enter_your_setails"
-        app:layout_constraintTop_toBottomOf="@+id/confirm_password" />
+        app:layout_constraintStart_toStartOf="@+id/please_enter_your_details_textView"
+        app:layout_constraintTop_toBottomOf="@+id/confirm_password_edit_Text" />
 
     <Button
         android:id="@+id/submit_button"
         android:layout_width="100dp"
         android:layout_height="35dp"
+        android:background="@drawable/curved_button1"
+        android:fontFamily="@font/poppins_medium"
         android:gravity="center"
         android:text="@string/submit"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:fontFamily="@font/poppins_medium"
-        android:background="@drawable/curved_button1"
         app:layout_constraintBottom_toBottomOf="@+id/skip_button"
-        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_setails"
+        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_details_textView"
         app:layout_constraintTop_toTopOf="@+id/skip_button"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -128,16 +128,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:padding="5dp"
-        android:gravity="center"
-        android:text="Please enter all details"
         android:fontFamily="@font/raleway"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Please enter all details"
+        android:textColor="@color/black"
         android:textSize="12dp"
         android:visibility="invisible"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_setails"
+        app:layout_constraintEnd_toEndOf="@+id/please_enter_your_details_textView"
         app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="@+id/please_enter_your_setails"
-        app:layout_constraintTop_toBottomOf="@+id/please_enter_your_setails" />
+        app:layout_constraintStart_toStartOf="@+id/please_enter_your_details_textView"
+        app:layout_constraintTop_toBottomOf="@+id/please_enter_your_details_textView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

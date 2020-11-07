@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.studgenie.app.R
 
 class CourseFragment : Fragment() {
-     override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {

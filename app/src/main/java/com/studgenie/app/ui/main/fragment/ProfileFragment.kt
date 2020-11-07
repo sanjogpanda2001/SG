@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.studgenie.app.R
 
-class ProfileFragmen : Fragment() {
+class ProfileFragment : Fragment() {
         override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

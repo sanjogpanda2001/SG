@@ -12,10 +12,10 @@ import com.studgenie.app.R
 import com.studgenie.app.data.model.CountryItem
 import de.hdodenhof.circleimageview.CircleImageView
 
-//class CountrySpinnerAdapter {
-//}
 
-class CountrySpinnerAdapter(val mContext: Context, val mData: ArrayList<CountryItem>) : BaseAdapter() {
+
+class CountrySpinnerAdapter(val mContext: Context, val mData: ArrayList<CountryItem>) :
+    BaseAdapter() {
     private val mInflate: LayoutInflater
 
     init {

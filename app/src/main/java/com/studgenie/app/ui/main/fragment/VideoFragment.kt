@@ -14,7 +14,7 @@ import com.studgenie.app.R
 import kotlinx.android.synthetic.main.fragment_video.view.*
 
 class VideoFragment : Fragment() {
-//    private val videoURI: Uri = Uri.parse("https://s3.amazonaws.com/_bc_dml/example-content/sintel_dash/sintel_vod.mpd")
+    //    private val videoURI: Uri = Uri.parse("https://s3.amazonaws.com/_bc_dml/example-content/sintel_dash/sintel_vod.mpd")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

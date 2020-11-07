@@ -12,7 +12,7 @@ interface UserDao {
     suspend fun updateUserdata(userData: UserData)
 
     @Query("UPDATE UserData SET number=:number, userName = :username,email = :email WHERE id=:pid")
-    suspend fun update(number:String,username:String,email:String,pid:Int)
+    suspend fun update(number: String, username: String, email: String, pid: Int)
 
     @Query("SELECT * FROM UserData ORDER BY id DESC")
     fun getUserData(): LiveData<List<UserData>>

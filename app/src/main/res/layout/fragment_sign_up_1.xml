@@ -40,17 +40,17 @@
         android:layout_width="192dp"
         android:layout_height="47dp"
         android:backgroundTint="@color/orangePrimary"
+        android:digits="0 1 2 3 4 5 6 7 8 9"
         android:fontFamily="@font/poppins_medium"
         android:hint="@string/enter_number"
         android:inputType="phone"
+        android:maxLength="10"
         android:textColor="@color/black"
         android:textSize="14dp"
         app:layout_constraintBottom_toTopOf="@+id/textView_info_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toStartOf="parent"
-        android:digits="0 1 2 3 4 5 6 7 8 9"
-        android:maxLength="10"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/spinner_countries"
@@ -117,18 +117,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:padding="5dp"
         android:background="@color/transparent_blue"
         android:fontFamily="@font/raleway"
+        android:gravity="center"
+        android:padding="5dp"
         android:text="OTP resend to your mobile number"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="12dp"
-        android:gravity="center"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

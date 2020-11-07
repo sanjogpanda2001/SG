@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">@color/white</color>
 
-<!--    For Login Screen-->
+    <!--    For Login Screen-->
     <color name="orangePrimary">#D9391D</color>
     <color name="orangeSecondary">#D53114</color>
 
@@ -12,9 +12,10 @@
     <color name="black">#000000</color>
     <color name="lightGrey">#CBC5C5</color>
     <color name="shadowGrey">#28ffffff</color>
-    <color name="lightshadowgrey">#707070</color>
-<!--    <color name="transparent_red">#00FF0000</color>-->
-    <color name="light_shadow_grey">#707070</color>
+
+    <!--    <color name="transparent_red">#00FF0000</color>-->
+    <color name="lightShadowGrey">#707070</color>
     <color name="transparent_red">#1FD9391D</color>
     <color name="transparent_blue">#1F2190DA</color>
+
 </resources>

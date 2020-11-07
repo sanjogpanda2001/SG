@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class UserStatus(
-    var status:String
-){
+    var status: String
+) {
     @PrimaryKey(autoGenerate = true)
-    var id:Int = 0
+    var id: Int = 0
 }

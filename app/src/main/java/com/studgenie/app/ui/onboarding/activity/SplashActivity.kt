@@ -12,7 +12,8 @@ import com.studgenie.app.R
 import com.studgenie.app.ui.main.activity.HomeActivity
 import androidx.lifecycle.Observer
 import com.studgenie.app.data.local.userStatusDatabase.UserStatusViewModel
-//import com.studgenie.app.ui.common.PermissionsHandler
+
+//import com.studgenie.app.util.PermissionsHandler
 //import com.studgenie.app.util.PERMISSION_REQUEST_CODE
 //import com.studgenie.app.util.SPLASH_DISPLAY_TIME
 
@@ -22,38 +23,38 @@ class SplashActivity : AppCompatActivity() {
     private val SPLASH_DISPLAY_TIME = 500
     private lateinit var statusViewModel: UserStatusViewModel
     var isStatusEmpty = 1
-    val MANIFEST_PERMISSION_ALL:Array<String> = arrayOf("android.permission.READ_PHONE_NUMBERS")
+    val MANIFEST_PERMISSION_ALL: Array<String> = arrayOf("android.permission.READ_PHONE_NUMBERS")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        Log.d("Splash","Inside Splash Activity")
+        Log.d("Splash", "Inside Splash Activity")
 
         //Checks & Request for All Permissions
 //        PermissionsHandler(this, MANIFEST_PERMISSION_ALL).checkForPermissions()
 
         statusViewModel = ViewModelProvider(this).get(UserStatusViewModel::class.java)
 
-        statusViewModel.readAllData?.observe(this, Observer{ status->
-            if (status.isEmpty()){
-                isStatusEmpty=1
-                Log.d("Splash1","List is empty")
-            }else{
-                isStatusEmpty=0
-                Log.d("Splash1",status[0].id.toString()+status[0].status)
+        statusViewModel.readAllData?.observe(this, Observer { status ->
+            if (status.isEmpty()) {
+                isStatusEmpty = 1
+                Log.d("Splash1", "List is empty")
+            } else {
+                isStatusEmpty = 0
+                Log.d("Splash1", status[0].id.toString() + status[0].status)
             }
         })
         /* Create an Intent that will start the Menu-Activity. */
         Handler().postDelayed(Runnable {
-           if(isStatusEmpty == 1){
-               val signupActivity = Intent(this, SignUpActivity::class.java)
-               this.startActivity(signupActivity)
-               this.finish()
-           }else{
-               val homeActivity = Intent(this, HomeActivity::class.java)
-               this.startActivity(homeActivity)
-               this.finish()
-           }
+            if (isStatusEmpty == 1) {
+                val signupActivity = Intent(this, SignUpActivity::class.java)
+                this.startActivity(signupActivity)
+                this.finish()
+            } else {
+                val homeActivity = Intent(this, HomeActivity::class.java)
+                this.startActivity(homeActivity)
+                this.finish()
+            }
         }, SPLASH_DISPLAY_TIME.toLong())
     }
 

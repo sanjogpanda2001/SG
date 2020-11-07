@@ -11,10 +11,8 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.studgenie.app.R
-import com.studgenie.app.data.local.tokenDatabase.AuthViewModel
-import com.studgenie.app.data.local.userDetailsDatabase.UserViewModel
 import com.studgenie.app.data.local.userStatusDatabase.UserStatusViewModel
-import com.studgenie.app.data.remote.ApiCountryService
+import com.studgenie.app.data.remote.request.ApiCountryService
 import com.studgenie.app.util.InternetConnectivity
 import com.studgenie.app.data.model.CountryItem
 import com.studgenie.app.ui.main.activity.HomeActivity
@@ -29,18 +27,18 @@ import androidx.lifecycle.Observer
 import com.studgenie.app.data.local.userStatusDatabase.UserStatus
 
 @Suppress("DEPRECATION")
-class SignUp1Fragment : Fragment(){
+class SignUp1Fragment : Fragment() {
 
-    private lateinit var statusViewModel:UserStatusViewModel
+    private lateinit var statusViewModel: UserStatusViewModel
     var isStatusEmpty = 1
 
 
-    lateinit var phoneNumberEditText:EditText
-    lateinit var continueButton:Button
-    lateinit var countryCode:String
-    lateinit var toastMessage:TextView
-    lateinit var exploreTextView:TextView
-    var phoneNumberLength:Int = 0
+    lateinit var phoneNumberEditText: EditText
+    lateinit var continueButton: Button
+    lateinit var countryCode: String
+    lateinit var toastMessage: TextView
+    lateinit var exploreTextView: TextView
+    var phoneNumberLength: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,17 +54,20 @@ class SignUp1Fragment : Fragment(){
 
         val spinner = rootView.findViewById<Spinner>(R.id.spinner_countries)
 
-        statusViewModel.readAllData?.observe(viewLifecycleOwner, Observer{ status->
-            if (status.isEmpty()){
+        statusViewModel.readAllData?.observe(viewLifecycleOwner, Observer { status ->
+            if (status.isEmpty()) {
                 isStatusEmpty = 1
-                Log.d("Coroutine2","List is empty")
-            }else{
+                Log.d("Coroutine2", "List is empty")
+            } else {
                 isStatusEmpty = 0
-                Log.d("Coroutine2",status[0].id.toString()+status[0].status)
+                Log.d("Coroutine2", status[0].id.toString() + status[0].status)
             }
         })
 
-        if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(requireContext())) {
+        if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(
+                requireContext()
+            )
+        ) {
             val retrofit = Retrofit.Builder()
 //            .baseUrl("http://192.168.43.217:3000")
 //            .baseUrl("http://sg-backend-dev.ap-south-1.elasticbeanstalk.com")
@@ -76,14 +77,21 @@ class SignUp1Fragment : Fragment(){
 
             val api = retrofit.create(ApiCountryService::class.java)
             api.fetchAllCountries().enqueue(object : Callback<List<CountryItem>> {
-                override fun onResponse(call: Call<List<CountryItem>>, response: Response<List<CountryItem>>) {
+                override fun onResponse(
+                    call: Call<List<CountryItem>>,
+                    response: Response<List<CountryItem>>
+                ) {
                     phoneNumberLength = response.body()!![0].no_of_digits
                     countryCode = response.body()!![0].code
 
-                    val adapter = CountrySpinnerAdapter(requireContext(),response.body() as ArrayList<CountryItem>)
+                    val adapter = CountrySpinnerAdapter(
+                        requireContext(),
+                        response.body() as ArrayList<CountryItem>
+                    )
                     spinner.adapter = adapter
                     Log.d("RetrofitCountryService", "OnResponse: ${response.body()!![0].code}")
                 }
+
                 override fun onFailure(call: Call<List<CountryItem>>, t: Throwable) {
                     Log.d("RetrofitCountryService", "OnFailure")
                     toastMessage.visibility = View.VISIBLE
@@ -91,62 +99,70 @@ class SignUp1Fragment : Fragment(){
                     toastMessage.setBackgroundResource(R.color.transparent_red)
                 }
             })
-        }else {
+        } else {
             toastMessage.visibility = View.VISIBLE
             toastMessage.text = "Check Your Internet Connection"
             toastMessage.setBackgroundResource(R.color.transparent_red)
         }
-            continueButton.setOnClickListener(View.OnClickListener {
-                if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(requireContext())) {
+        continueButton.setOnClickListener(View.OnClickListener {
+            if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(
+                    requireContext()
+                )
+            ) {
 
-                    val storePhoneNo = phoneNumberEditText.text.toString().trim()
-                    if (storePhoneNo.matches("".toRegex())) {
-                        toastMessage.visibility = View.VISIBLE
-                        toastMessage.text = "Enter your number first"
-                        toastMessage.setBackgroundResource(R.color.transparent_red)
-                    } else {
-                        if(InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(requireContext())){
-                            if (storePhoneNo.length == phoneNumberLength){
+                val storePhoneNo = phoneNumberEditText.text.toString().trim()
+                if (storePhoneNo.matches("".toRegex())) {
+                    toastMessage.visibility = View.VISIBLE
+                    toastMessage.text = "Enter your number first"
+                    toastMessage.setBackgroundResource(R.color.transparent_red)
+                } else {
+                    if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(
+                            requireContext()
+                        )
+                    ) {
+                        if (storePhoneNo.length == phoneNumberLength) {
 
-                                val status = UserStatus("User Entered")
-                                if (isStatusEmpty == 1){
-                                    statusViewModel.addUserStatus(status)
-                                    Log.d("Coroutine2","Successfully added!")
-                                }else{
-                                    statusViewModel.update("second time",1)
-                                    Log.d("Coroutine2","Successfully updated!")
-                                }
-
-                                val signUp2Fragment = SignUp2Fragment()
-                                val args = Bundle()
-                                args.putString("phNo", phoneNumberEditText.text.toString())
-                                signUp2Fragment.arguments = args
-                                fragmentManager!!.beginTransaction().replace(R.id.signup_fragment_container,signUp2Fragment).commit()
-                            }else{
-                                toastMessage.visibility = View.VISIBLE
-                                toastMessage.text = "Mobile number should be of $phoneNumberLength digits"
-                                toastMessage.setBackgroundResource(R.color.transparent_red)
+                            val status = UserStatus("User Entered")
+                            if (isStatusEmpty == 1) {
+                                statusViewModel.addUserStatus(status)
+                                Log.d("Coroutine2", "Successfully added!")
+                            } else {
+                                statusViewModel.update("second time", 1)
+                                Log.d("Coroutine2", "Successfully updated!")
                             }
-                        }else{
+
+                            val signUp2Fragment = SignUp2Fragment()
+                            val args = Bundle()
+                            args.putString("phNo", phoneNumberEditText.text.toString())
+                            signUp2Fragment.arguments = args
+                            fragmentManager!!.beginTransaction()
+                                .replace(R.id.signup_fragment_container, signUp2Fragment).commit()
+                        } else {
                             toastMessage.visibility = View.VISIBLE
-                            toastMessage.text = "Check Your Internet Connection"
+                            toastMessage.text =
+                                "Mobile number should be of $phoneNumberLength digits"
                             toastMessage.setBackgroundResource(R.color.transparent_red)
                         }
+                    } else {
+                        toastMessage.visibility = View.VISIBLE
+                        toastMessage.text = "Check Your Internet Connection"
+                        toastMessage.setBackgroundResource(R.color.transparent_red)
                     }
-                } else {
-                    toastMessage.visibility = View.VISIBLE
-                    toastMessage.text = "Check Your Internet Connection"
-                    toastMessage.setBackgroundResource(R.color.transparent_red)
                 }
-            })
+            } else {
+                toastMessage.visibility = View.VISIBLE
+                toastMessage.text = "Check Your Internet Connection"
+                toastMessage.setBackgroundResource(R.color.transparent_red)
+            }
+        })
         exploreTextView.setOnClickListener {
             val status = UserStatus("User Entered")
-            if (isStatusEmpty == 1){
+            if (isStatusEmpty == 1) {
                 statusViewModel.addUserStatus(status)
-                Log.d("Coroutine2","Successfully added!")
-            }else{
-                statusViewModel.update("second time",1)
-                Log.d("Coroutine2","Successfully updated!")
+                Log.d("Coroutine2", "Successfully added!")
+            } else {
+                statusViewModel.update("second time", 1)
+                Log.d("Coroutine2", "Successfully updated!")
             }
 
             val i = Intent(activity, HomeActivity::class.java)

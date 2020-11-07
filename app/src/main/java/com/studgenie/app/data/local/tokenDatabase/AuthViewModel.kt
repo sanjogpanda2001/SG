@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AuthViewModel(application: Application):AndroidViewModel(application) {
-    var readAllData: LiveData<List<AuthToken>>?=null
-    private var repository: AuthRepository?=null
+class AuthViewModel(application: Application) : AndroidViewModel(application) {
+    var readAllData: LiveData<List<AuthToken>>? = null
+    private var repository: AuthRepository? = null
 
     init {
         val authDao = AuthDatabase.getDatabase(
@@ -19,25 +19,25 @@ class AuthViewModel(application: Application):AndroidViewModel(application) {
         readAllData = repository!!.readAllData
     }
 
-    fun addToken(authToken: AuthToken){
+    fun addToken(authToken: AuthToken) {
         viewModelScope.launch(Dispatchers.IO) {
             repository?.addToken(authToken)
         }
     }
 
-    fun updateToken(authToken: AuthToken){
+    fun updateToken(authToken: AuthToken) {
         viewModelScope.launch(Dispatchers.IO) {
             repository?.updateToken(authToken)
         }
     }
 
-    fun update(token:String,pid:Int){
+    fun update(token: String, pid: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             repository?.update(token, pid)
         }
     }
 
-    fun deleteAuthToken(){
+    fun deleteAuthToken() {
         viewModelScope.launch(Dispatchers.IO) {
             repository?.deleteAuthToken()
         }

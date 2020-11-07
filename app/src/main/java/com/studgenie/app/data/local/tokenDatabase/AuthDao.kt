@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
-interface AuthDao{
+interface AuthDao {
     @Insert
     suspend fun addToken(authToken: AuthToken)
 
@@ -12,7 +12,7 @@ interface AuthDao{
     suspend fun updateToken(authToken: AuthToken)
 
     @Query("UPDATE AuthToken SET authToken=:token WHERE id=:pid")
-    suspend fun update(token:String,pid:Int)
+    suspend fun update(token: String, pid: Int)
 
     @Query("SELECT * FROM AuthToken ORDER BY id DESC")
     fun getAuthToken(): LiveData<List<AuthToken>>

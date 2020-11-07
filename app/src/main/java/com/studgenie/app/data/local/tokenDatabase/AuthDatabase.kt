@@ -5,17 +5,19 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [AuthToken ::class],version = 1,exportSchema = false)
-abstract class AuthDatabase:RoomDatabase() {
+@Database(entities = [AuthToken::class], version = 1, exportSchema = false)
+abstract class AuthDatabase : RoomDatabase() {
     abstract fun getAuthDao(): AuthDao
-    companion object{
-        @Volatile private var INSTANCE: AuthDatabase?=null
+
+    companion object {
+        @Volatile
+        private var INSTANCE: AuthDatabase? = null
         fun getDatabase(context: Context): AuthDatabase {
             val tempInstance = INSTANCE
-            if(tempInstance != null){
+            if (tempInstance != null) {
                 return tempInstance
             }
-            synchronized(this){
+            synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AuthDatabase::class.java,

@@ -9,15 +9,15 @@ import androidx.lifecycle.LiveData
 class UserStatusRepository(private val userStatusDao: UserStatusDao) {
     val readAllData: LiveData<List<UserStatus>> = userStatusDao.getStatus()
 
-    suspend fun addUserStatus(userStatus: UserStatus){
+    suspend fun addUserStatus(userStatus: UserStatus) {
         userStatusDao.addStatus(userStatus)
     }
 
-    suspend fun update(status:String,pid:Int){
+    suspend fun update(status: String, pid: Int) {
         userStatusDao.update(status, pid)
     }
 
-    suspend fun deleteStatusData(){
+    suspend fun deleteStatusData() {
         userStatusDao.deleteStatusData()
     }
 }
