@@ -27,9 +27,9 @@ import com.studgenie.app.R
 import com.studgenie.app.data.model.SendNumber
 import com.studgenie.app.data.remote.response.SignUpApiResponse
 import com.studgenie.app.data.remote.request.SignUpApi
-import com.studgenie.app.data.local.tokenDatabase.AuthToken
-import com.studgenie.app.data.local.tokenDatabase.AuthViewModel
-import com.studgenie.app.data.local.userDetailsDatabase.UserData
+import com.studgenie.app.data.local.tokenDatabase.AuthTokenDataModel
+import com.studgenie.app.data.local.tokenDatabase.AuthTokenViewModel
+import com.studgenie.app.data.local.userDetailsDatabase.UserDataModel
 import com.studgenie.app.data.local.userDetailsDatabase.UserViewModel
 import com.studgenie.app.data.remote.response.SigninApiResponse
 
@@ -48,7 +48,7 @@ import kotlin.math.roundToInt
 @Suppress("DEPRECATION")
 class SignUp2Fragment : Fragment(), VerificationListener {
 
-    private lateinit var authViewModel: AuthViewModel
+    private lateinit var authTokenViewModel: AuthTokenViewModel
     private lateinit var userViewModel: UserViewModel
     var isTokenEmpty = 1
     var isUserEmpty:Int = 1
@@ -69,7 +69,7 @@ class SignUp2Fragment : Fragment(), VerificationListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        authViewModel = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
+        authTokenViewModel = ViewModelProvider(requireActivity()).get(AuthTokenViewModel::class.java)
         userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
 
         val rootView = inflater.inflate(R.layout.fragment_sign_up_2, container, false)
@@ -108,7 +108,7 @@ class SignUp2Fragment : Fragment(), VerificationListener {
             toastMessage.text = "Check Your Internet Connection"
             toastMessage.setBackgroundResource(R.color.transparent_red)
         }
-        authViewModel.readAllData?.observe(viewLifecycleOwner, Observer{ auth->
+        authTokenViewModel.readAllData?.observe(viewLifecycleOwner, Observer{ auth->
             if (auth.isEmpty()){
                 isTokenEmpty = 1
                 Log.d("Coroutine","List is empty")
@@ -120,7 +120,7 @@ class SignUp2Fragment : Fragment(), VerificationListener {
             }
         })
 
-        userViewModel.readAllData?.observe(viewLifecycleOwner, Observer{ user->
+        userViewModel.readAllDataModel?.observe(viewLifecycleOwner, Observer{ user->
             if (user.isEmpty()){
                 isUserEmpty = 1
                 Log.d("Coroutine1","List is empty")
@@ -154,120 +154,123 @@ class SignUp2Fragment : Fragment(), VerificationListener {
                     val sendNumber = SendNumber(phone.toString())
                     signUpApi.userSignup(sendNumber).enqueue(object : Callback<SignUpApiResponse> {
                         override fun onResponse(call: Call<SignUpApiResponse>, response: Response<SignUpApiResponse>) {
-                            Log.d(
-                                "RetrofitSignup",
-                                "OnResponse: ${response.body()?.message.toString()} \n"
-                                        + "Auth Token: ${response.body()?.auth_token.toString()} \n"
-                                        + "Response Code: ${response.code()}\n"
-                            )
-                            if (response.body()?.message.toString() == "User already exists") {
+                            if (response.isSuccessful){
+                                Log.d("RetrofitSignup",
+                                    "OnResponse: ${response.body()?.message.toString()} \n"
+                                            + "Auth Token: ${response.body()?.auth_token.toString()} \n"
+                                            + "Response Code: ${response.code()}\n"
+                                )
+                                if (response.body()?.message.toString() == "User already exists") {
 
-                                val signInApi = retrofit.create(SignUpApi::class.java)
-                                val sendNumberForSignin = SendNumber(phone.toString())
-                                signInApi.userSignin(sendNumberForSignin).enqueue(object :
-                                    Callback<SigninApiResponse> {
-                                    override fun onResponse(
-                                        call: Call<SigninApiResponse>,
-                                        response: Response<SigninApiResponse>
-                                    ) {
-                                        Log.d(
-                                            "RetrofitSignin",
-                                            "OnResponse:\n Auth Token: ${response.body()?.authToken} \n"
-                                                    + "UserBody: ${
-                                                response.body()?.data?.get(0)?.number.toString()
-                                                        + response.body()?.data?.get(0)?.first_name.toString()
-                                                        + response.body()?.data?.get(0)?.last_name.toString()
-                                                        + response.body()?.data?.get(0)?.dob.toString()
-                                                        + response.body()?.data?.get(0)?.picture_url.toString()
-                                                        + response.body()?.data?.get(0)?.account_status.toString()
-                                                        + response.body()?.data?.get(0)?.max_devices!!.toInt()
-                                                        + response.body()?.data?.get(0)?.user_name.toString()
-                                                        + response.body()?.data?.get(0)?.student_id!!.toInt()
-                                                        + response.body()?.data?.get(0)?.institute_id.toString()
-                                                        + response.body()?.data?.get(0)?.email.toString()
-                                            } \n"
-                                                    + "Response Code: ${response.code()}\n"
-                                        )
+                                    val signInApi = retrofit.create(SignUpApi::class.java)
+                                    val sendNumberForSignin = SendNumber(phone.toString())
+                                    signInApi.userSignin(sendNumberForSignin).enqueue(object :
+                                        Callback<SigninApiResponse> {
+                                        override fun onResponse(call: Call<SigninApiResponse>, response: Response<SigninApiResponse>) {
+                                            if (response.isSuccessful){
+                                                Log.d(
+                                                    "RetrofitSignin",
+                                                    "OnResponse:\n Auth Token: ${response.body()?.authToken} \n"
+                                                            + "UserBody: ${
+                                                        response.body()?.data?.get(0)?.number.toString()
+                                                                + response.body()?.data?.get(0)?.first_name.toString()
+                                                                + response.body()?.data?.get(0)?.last_name.toString()
+                                                                + response.body()?.data?.get(0)?.dob.toString()
+                                                                + response.body()?.data?.get(0)?.picture_url.toString()
+                                                                + response.body()?.data?.get(0)?.account_status.toString()
+                                                                + response.body()?.data?.get(0)?.max_devices!!.toInt()
+                                                                + response.body()?.data?.get(0)?.user_name.toString()
+                                                                + response.body()?.data?.get(0)?.student_id!!.toInt()
+                                                                + response.body()?.data?.get(0)?.institute_id.toString()
+                                                                + response.body()?.data?.get(0)?.email.toString()
+                                                    } \n"
+                                                            + "Response Code: ${response.code()}\n"
+                                                )
 
-                                        val authTokenSignin = AuthToken(response.body()?.authToken.toString())
-                                        val userDataSignin = UserData(
-                                            response.body()?.data?.get(0)?.number.toString(),
-                                            response.body()?.data?.get(0)?.first_name.toString(),
-                                            response.body()?.data?.get(0)?.last_name.toString(),
-                                            response.body()?.data?.get(0)?.dob.toString(),
-                                            response.body()?.data?.get(0)?.picture_url.toString(),
-                                            response.body()?.data?.get(0)?.account_status.toString(),
-                                            response.body()?.data?.get(0)?.max_devices!!.toInt(),
-                                            response.body()?.data?.get(0)?.user_name.toString(),
-                                            response.body()?.data?.get(0)?.student_id!!.toInt(),
-                                            response.body()?.data?.get(0)?.institute_id.toString(),
-                                            response.body()?.data?.get(0)?.email.toString()
-                                        )
-                                        if (isTokenEmpty == 1) {
-                                            authViewModel.addToken(authTokenSignin)
-                                            Log.d("CoroutineToken", "Successfully added!")
-                                        } else {
-                                            authViewModel.update(response.body()?.authToken.toString(),storeAuthTokenId)
-                                            Log.d("CoroutineToken", "Successfully updated!")
+                                                val authTokenSignin = AuthTokenDataModel(response.body()?.authToken.toString())
+                                                val userDataSignin = UserDataModel(
+                                                    response.body()?.data?.get(0)?.number.toString(),
+                                                    response.body()?.data?.get(0)?.first_name.toString(),
+                                                    response.body()?.data?.get(0)?.last_name.toString(),
+                                                    response.body()?.data?.get(0)?.dob.toString(),
+                                                    response.body()?.data?.get(0)?.picture_url.toString(),
+                                                    response.body()?.data?.get(0)?.account_status.toString(),
+                                                    response.body()?.data?.get(0)?.max_devices!!.toInt(),
+                                                    response.body()?.data?.get(0)?.user_name.toString(),
+                                                    response.body()?.data?.get(0)?.student_id!!.toInt(),
+                                                    response.body()?.data?.get(0)?.institute_id.toString(),
+                                                    response.body()?.data?.get(0)?.email.toString()
+                                                )
+                                                if (isTokenEmpty == 1) {
+                                                    authTokenViewModel.addAuthToken(authTokenSignin)
+                                                    Log.d("CoroutineToken", "Successfully added!")
+                                                } else {
+                                                    authTokenViewModel.updateAuthToken(response.body()?.authToken.toString(),storeAuthTokenId)
+                                                    Log.d("CoroutineToken", "Successfully updated!")
+                                                }
+                                                if (isUserEmpty == 1) {
+                                                    userViewModel.addUserData(userDataSignin)
+                                                    Log.d("CoroutineUserData", "Successfully added!")
+                                                } else {
+                                                    userViewModel.updateUserData(
+                                                        response.body()?.data?.get(0)?.number.toString(),
+                                                        response.body()?.data?.get(0)?.user_name.toString(),
+                                                        response.body()?.data?.get(0)?.email.toString(),
+                                                        storeUserId
+                                                    )
+                                                    Log.d("CoroutineUserData", "Successfully updated!")
+                                                }
+
+                                                val intent = Intent(activity, HomeActivity::class.java)
+                                                startActivity(intent)
+                                                (activity as Activity?)!!.overridePendingTransition(0, 0)
+                                                activity?.finish()
+                                            }else{
+                                                toastMessage.visibility = View.VISIBLE
+                                                toastMessage.text = "Server Error"
+                                                toastMessage.setBackgroundResource(R.color.transparent_red)
+                                            }
                                         }
-                                        if (isUserEmpty == 1) {
-                                            userViewModel.addUserData(userDataSignin)
-                                            Log.d("CoroutineUserData", "Successfully added!")
-                                        } else {
-                                            userViewModel.update(
-                                                response.body()?.data?.get(0)?.number.toString(),
-                                                response.body()?.data?.get(0)?.user_name.toString(),
-                                                response.body()?.data?.get(0)?.email.toString(),
-                                                storeUserId
-                                            )
-                                            Log.d("CoroutineUserData", "Successfully updated!")
+                                        override fun onFailure(call: Call<SigninApiResponse>, t: Throwable) {
+                                            Log.d("RetrofitSignin", "onFailure")
+                                            toastMessage.visibility = View.VISIBLE
+                                            toastMessage.text = "Try after some time "
+                                            toastMessage.setBackgroundResource(R.color.transparent_red)
                                         }
-
-                                        val intent = Intent(activity, HomeActivity::class.java)
-                                        startActivity(intent)
-                                        (activity as Activity?)!!.overridePendingTransition(0, 0)
-                                        activity?.finish()
-                                    }
-
-                                    override fun onFailure(call: Call<SigninApiResponse>, t: Throwable) {
-                                        Log.d("RetrofitSignin", "onFailure")
-                                        toastMessage.visibility = View.VISIBLE
-                                        toastMessage.text = "Try after some time "
-                                        toastMessage.setBackgroundResource(R.color.transparent_red)
-                                    }
-                                })
-                            } else {
-                                val mAuthToken = AuthToken(response.body()?.auth_token.toString())
-//                                val mAuthToken = AuthToken("bbbbbbbbbb")
-                                if (isTokenEmpty == 1) {
-                                    authViewModel.addToken(mAuthToken)
-
-                                    Log.d("CoroutineAnkan", "Successfully added!")
-                                    val signUp3Fragment = SignUp3Fragment()
-                                    val args = Bundle()
-                                    args.putString("phNo", phone)
-                                    signUp3Fragment.arguments = args
-                                    fragmentManager!!.beginTransaction()
-                                        .replace(R.id.signup_fragment_container, signUp3Fragment)
-                                        .commit()
+                                    })
                                 } else {
-                                    authViewModel.update(
-                                        response.body()?.auth_token.toString(),
-                                        storeAuthTokenId
-                                    )
-                                    Log.d("Coroutine", "Successfully updated!")
+                                    val mAuthToken = AuthTokenDataModel(response.body()?.auth_token.toString())
+//                                val mAuthToken = AuthToken("bbbbbbbbbb")
+                                    if (isTokenEmpty == 1) {
+                                        authTokenViewModel.addAuthToken(mAuthToken)
 
-                                    val signUp3Fragment = SignUp3Fragment()
-                                    val args = Bundle()
-                                    args.putString("phNo", phone)
-                                    signUp3Fragment.arguments = args
-                                    fragmentManager!!.beginTransaction()
-                                        .replace(R.id.signup_fragment_container, signUp3Fragment)
-                                        .commit()
+                                        Log.d("CoroutineAnkan", "Successfully added!")
+                                        val signUp3Fragment = SignUp3Fragment()
+                                        val args = Bundle()
+                                        args.putString("phNo", phone)
+                                        signUp3Fragment.arguments = args
+                                        fragmentManager!!.beginTransaction()
+                                            .replace(R.id.signup_fragment_container, signUp3Fragment)
+                                            .commit()
+                                    } else {
+                                        authTokenViewModel.updateAuthToken(response.body()?.auth_token.toString(), storeAuthTokenId)
+                                        Log.d("Coroutine", "Successfully updated!")
+
+                                        val signUp3Fragment = SignUp3Fragment()
+                                        val args = Bundle()
+                                        args.putString("phNo", phone)
+                                        signUp3Fragment.arguments = args
+                                        fragmentManager!!.beginTransaction()
+                                            .replace(R.id.signup_fragment_container, signUp3Fragment)
+                                            .commit()
+                                    }
                                 }
+                            }else{
+                                toastMessage.visibility = View.VISIBLE
+                                toastMessage.text = "Server Error"
+                                toastMessage.setBackgroundResource(R.color.transparent_red)
                             }
                         }
-
                         override fun onFailure(call: Call<SignUpApiResponse>, t: Throwable) {
                             Log.d("RetrofitSignup", "OnFailure")
                             toastMessage.visibility = View.VISIBLE

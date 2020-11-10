@@ -4,20 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
-import com.studgenie.app.data.local.tokenDatabase.AuthToken
 
 @Dao
 interface UserStatusDao {
     @Insert
-    suspend fun addStatus(userStatus: UserStatus)
+    suspend fun addUserStatus(userStatusModel: UserStatusModel)
 
-    @Query("UPDATE UserStatus SET status=:status WHERE id=:pid")
-    suspend fun update(status: String, pid: Int)
+    @Query("UPDATE UserStatusModel SET status=:status WHERE id=:pid")
+    suspend fun updateUserStatus(status: String, pid: Int)
 
-    @Query("SELECT * FROM UserStatus ORDER BY id DESC")
-    fun getStatus(): LiveData<List<UserStatus>>
+    @Query("SELECT * FROM UserStatusModel ORDER BY id DESC")
+    fun getUserStatus(): LiveData<List<UserStatusModel>>
 
-    @Query("DELETE FROM UserStatus")
-    suspend fun deleteStatusData()
+    @Query("DELETE FROM UserStatusModel")
+    suspend fun deleteUserStatus()
 }

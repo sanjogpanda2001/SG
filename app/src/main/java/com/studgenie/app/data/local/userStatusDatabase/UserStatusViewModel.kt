@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 //}
 
 class UserStatusViewModel(application: Application) : AndroidViewModel(application) {
-    var readAllData: LiveData<List<UserStatus>>? = null
+    var readAllData: LiveData<List<UserStatusModel>>? = null
     private var repository: UserStatusRepository? = null
 
     init {
@@ -22,21 +22,21 @@ class UserStatusViewModel(application: Application) : AndroidViewModel(applicati
         readAllData = repository!!.readAllData
     }
 
-    fun addUserStatus(userStatus: UserStatus) {
+    fun addUserStatus(userStatusModel: UserStatusModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository?.addUserStatus(userStatus)
+            repository?.addUserStatus(userStatusModel)
         }
     }
 
-    fun update(status: String, pid: Int) {
+    fun updateUserStatus(status: String, pid: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository?.update(status, pid)
+            repository?.updateUserStatus(status, pid)
         }
     }
 
-    fun deleteStatusData() {
+    fun deleteUserStatus() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository?.deleteStatusData()
+            repository?.deleteUserStatus()
         }
     }
 }

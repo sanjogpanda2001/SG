@@ -7,17 +7,17 @@ import androidx.lifecycle.LiveData
 //}
 
 class UserStatusRepository(private val userStatusDao: UserStatusDao) {
-    val readAllData: LiveData<List<UserStatus>> = userStatusDao.getStatus()
+    val readAllData: LiveData<List<UserStatusModel>> = userStatusDao.getUserStatus()
 
-    suspend fun addUserStatus(userStatus: UserStatus) {
-        userStatusDao.addStatus(userStatus)
+    suspend fun addUserStatus(userStatusModel: UserStatusModel) {
+        userStatusDao.addUserStatus(userStatusModel)
     }
 
-    suspend fun update(status: String, pid: Int) {
-        userStatusDao.update(status, pid)
+    suspend fun updateUserStatus(status: String, pid: Int) {
+        userStatusDao.updateUserStatus(status, pid)
     }
 
-    suspend fun deleteStatusData() {
-        userStatusDao.deleteStatusData()
+    suspend fun deleteUserStatus() {
+        userStatusDao.deleteUserStatus()
     }
 }

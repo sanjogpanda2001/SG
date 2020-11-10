@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.msg91.sendotpandroid.library.internal.SendOTP
 import com.studgenie.app.R
-import com.studgenie.app.data.local.tokenDatabase.AuthViewModel
+import com.studgenie.app.data.local.tokenDatabase.AuthTokenViewModel
 import com.studgenie.app.ui.onboarding.fragment.SignUp1Fragment
 import com.studgenie.app.ui.onboarding.fragment.SignUp3Fragment
 import androidx.lifecycle.Observer
@@ -17,7 +17,7 @@ import com.studgenie.app.util.PERMISSION_REQUEST_CODE
 
 
 class SignUpActivity : AppCompatActivity() {
-    private lateinit var authViewModel: AuthViewModel
+    private lateinit var authTokenViewModel: AuthTokenViewModel
     val MANIFEST_PERMISSION_ALL: Array<String> = arrayOf(
         "android.permission.READ_PHONE_NUMBERS",
         "android.permission.READ_PHONE_NUMBERS",
@@ -37,9 +37,9 @@ class SignUpActivity : AppCompatActivity() {
 
         SendOTP.initializeApp(application, "343141A0eUofjHNg5f73eff8P1")
 
-        authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+        authTokenViewModel = ViewModelProvider(this).get(AuthTokenViewModel::class.java)
 
-        authViewModel.readAllData?.observe(this, Observer { auth ->
+        authTokenViewModel.readAllData?.observe(this, Observer { auth ->
             if (auth.isEmpty()) {
                 Log.d("SignUpActivity", "List is empty")
                 supportFragmentManager.beginTransaction()

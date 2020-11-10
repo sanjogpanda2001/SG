@@ -9,7 +9,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [UserStatus::class], version = 3, exportSchema = false)
+@Database(entities = [UserStatusModel::class], version = 3, exportSchema = false)
 abstract class UserStatusDatabase : RoomDatabase() {
     abstract fun getUserStatusDao(): UserStatusDao
 

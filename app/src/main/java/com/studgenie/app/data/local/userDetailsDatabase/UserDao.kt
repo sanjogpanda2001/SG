@@ -6,18 +6,15 @@ import androidx.room.*
 @Dao
 interface UserDao {
     @Insert
-    suspend fun addUserData(userData: UserData)
+    suspend fun addUserData(userDataModel: UserDataModel)
 
-    @Update
-    suspend fun updateUserdata(userData: UserData)
+    @Query("UPDATE UserDataModel SET number=:number, userName = :username,email = :email WHERE id=:pid")
+    suspend fun updateUserData(number: String, username: String, email: String, pid: Int)
 
-    @Query("UPDATE UserData SET number=:number, userName = :username,email = :email WHERE id=:pid")
-    suspend fun update(number: String, username: String, email: String, pid: Int)
-
-    @Query("SELECT * FROM UserData ORDER BY id DESC")
-    fun getUserData(): LiveData<List<UserData>>
+    @Query("SELECT * FROM UserDataModel ORDER BY id DESC")
+    fun getUserData(): LiveData<List<UserDataModel>>
 
 
-    @Query("DELETE FROM UserData")
+    @Query("DELETE FROM UserDataModel")
     suspend fun deleteUserData()
 }

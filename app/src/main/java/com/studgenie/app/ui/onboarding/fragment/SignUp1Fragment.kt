@@ -24,7 +24,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import androidx.lifecycle.Observer
-import com.studgenie.app.data.local.userStatusDatabase.UserStatus
+import com.studgenie.app.data.local.userStatusDatabase.UserStatusModel
 
 @Suppress("DEPRECATION")
 class SignUp1Fragment : Fragment() {
@@ -77,21 +77,69 @@ class SignUp1Fragment : Fragment() {
 
             val api = retrofit.create(ApiCountryService::class.java)
             api.fetchAllCountries().enqueue(object : Callback<List<CountryItem>> {
-                override fun onResponse(
-                    call: Call<List<CountryItem>>,
-                    response: Response<List<CountryItem>>
-                ) {
-                    phoneNumberLength = response.body()!![0].no_of_digits
-                    countryCode = response.body()!![0].code
+                override fun onResponse(call: Call<List<CountryItem>>, response: Response<List<CountryItem>>) {
+                    if (response.isSuccessful){
+                        phoneNumberLength = response.body()!![0].no_of_digits
+                        countryCode = response.body()!![0].code
 
-                    val adapter = CountrySpinnerAdapter(
-                        requireContext(),
-                        response.body() as ArrayList<CountryItem>
-                    )
-                    spinner.adapter = adapter
-                    Log.d("RetrofitCountryService", "OnResponse: ${response.body()!![0].code}")
+                        val adapter = CountrySpinnerAdapter(
+                            requireContext(),
+                            response.body() as ArrayList<CountryItem>
+                        )
+                        spinner.adapter = adapter
+                        Log.d("RetrofitCountryService", "OnResponse: ${response.body()!![0].code}")
+
+
+                        continueButton.setOnClickListener(View.OnClickListener {
+                            if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(requireContext())) {
+                                val storePhoneNo = phoneNumberEditText.text.toString().trim()
+                                if (storePhoneNo.matches("".toRegex())) {
+                                    toastMessage.visibility = View.VISIBLE
+                                    toastMessage.text = "Enter your number first"
+                                    toastMessage.setBackgroundResource(R.color.transparent_red)
+                                } else {
+                                    if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(requireContext())) {
+                                        if (storePhoneNo.length == phoneNumberLength) {
+
+                                            val status = UserStatusModel("User Entered")
+                                            if (isStatusEmpty == 1) {
+                                                statusViewModel.addUserStatus(status)
+                                                Log.d("Coroutine2", "Successfully added!")
+                                            } else {
+                                                statusViewModel.updateUserStatus("second time", 1)
+                                                Log.d("Coroutine2", "Successfully updated!")
+                                            }
+
+                                            val signUp2Fragment = SignUp2Fragment()
+                                            val args = Bundle()
+                                            args.putString("phNo", phoneNumberEditText.text.toString())
+                                            signUp2Fragment.arguments = args
+                                            fragmentManager!!.beginTransaction()
+                                                .replace(R.id.signup_fragment_container, signUp2Fragment).commit()
+                                        } else {
+                                            toastMessage.visibility = View.VISIBLE
+                                            toastMessage.text =
+                                                "Mobile number should be of $phoneNumberLength digits"
+                                            toastMessage.setBackgroundResource(R.color.transparent_red)
+                                        }
+                                    } else {
+                                        toastMessage.visibility = View.VISIBLE
+                                        toastMessage.text = "Check Your Internet Connection"
+                                        toastMessage.setBackgroundResource(R.color.transparent_red)
+                                    }
+                                }
+                            } else {
+                                toastMessage.visibility = View.VISIBLE
+                                toastMessage.text = "Check Your Internet Connection"
+                                toastMessage.setBackgroundResource(R.color.transparent_red)
+                            }
+                        })
+                    }else{
+                        toastMessage.visibility = View.VISIBLE
+                        toastMessage.text = "Server Error"
+                        toastMessage.setBackgroundResource(R.color.transparent_red)
+                    }
                 }
-
                 override fun onFailure(call: Call<List<CountryItem>>, t: Throwable) {
                     Log.d("RetrofitCountryService", "OnFailure")
                     toastMessage.visibility = View.VISIBLE
@@ -104,64 +152,13 @@ class SignUp1Fragment : Fragment() {
             toastMessage.text = "Check Your Internet Connection"
             toastMessage.setBackgroundResource(R.color.transparent_red)
         }
-        continueButton.setOnClickListener(View.OnClickListener {
-            if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(
-                    requireContext()
-                )
-            ) {
-
-                val storePhoneNo = phoneNumberEditText.text.toString().trim()
-                if (storePhoneNo.matches("".toRegex())) {
-                    toastMessage.visibility = View.VISIBLE
-                    toastMessage.text = "Enter your number first"
-                    toastMessage.setBackgroundResource(R.color.transparent_red)
-                } else {
-                    if (InternetConnectivity.isConnected(requireContext()) && InternetConnectivity.isConnectedFast(
-                            requireContext()
-                        )
-                    ) {
-                        if (storePhoneNo.length == phoneNumberLength) {
-
-                            val status = UserStatus("User Entered")
-                            if (isStatusEmpty == 1) {
-                                statusViewModel.addUserStatus(status)
-                                Log.d("Coroutine2", "Successfully added!")
-                            } else {
-                                statusViewModel.update("second time", 1)
-                                Log.d("Coroutine2", "Successfully updated!")
-                            }
-
-                            val signUp2Fragment = SignUp2Fragment()
-                            val args = Bundle()
-                            args.putString("phNo", phoneNumberEditText.text.toString())
-                            signUp2Fragment.arguments = args
-                            fragmentManager!!.beginTransaction()
-                                .replace(R.id.signup_fragment_container, signUp2Fragment).commit()
-                        } else {
-                            toastMessage.visibility = View.VISIBLE
-                            toastMessage.text =
-                                "Mobile number should be of $phoneNumberLength digits"
-                            toastMessage.setBackgroundResource(R.color.transparent_red)
-                        }
-                    } else {
-                        toastMessage.visibility = View.VISIBLE
-                        toastMessage.text = "Check Your Internet Connection"
-                        toastMessage.setBackgroundResource(R.color.transparent_red)
-                    }
-                }
-            } else {
-                toastMessage.visibility = View.VISIBLE
-                toastMessage.text = "Check Your Internet Connection"
-                toastMessage.setBackgroundResource(R.color.transparent_red)
-            }
-        })
         exploreTextView.setOnClickListener {
-            val status = UserStatus("User Entered")
+            val status = UserStatusModel("User Entered")
             if (isStatusEmpty == 1) {
                 statusViewModel.addUserStatus(status)
                 Log.d("Coroutine2", "Successfully added!")
             } else {
-                statusViewModel.update("second time", 1)
+                statusViewModel.updateUserStatus("second time", 1)
                 Log.d("Coroutine2", "Successfully updated!")
             }
 

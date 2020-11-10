@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class AuthToken(
+data class AuthTokenDataModel(
     var authToken: String
 ) {
     @PrimaryKey(autoGenerate = true)

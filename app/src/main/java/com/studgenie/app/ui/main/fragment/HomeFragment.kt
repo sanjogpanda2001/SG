@@ -14,13 +14,12 @@ import com.studgenie.app.ui.onboarding.activity.SignUpActivity
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.studgenie.app.data.local.tokenDatabase.AuthViewModel
+import com.studgenie.app.data.local.tokenDatabase.AuthTokenViewModel
 import com.studgenie.app.data.local.userDetailsDatabase.UserViewModel
 import com.studgenie.app.data.local.userStatusDatabase.UserStatusViewModel
-import com.studgenie.app.ui.main.activity.HomeActivity
 
 class HomeFragment : Fragment() {
-    private lateinit var authViewModel: AuthViewModel
+    private lateinit var authTokenViewModel: AuthTokenViewModel
     private lateinit var userViewModel: UserViewModel
     private lateinit var statusViewModel: UserStatusViewModel
 
@@ -36,11 +35,11 @@ class HomeFragment : Fragment() {
         val rootView = inflater.inflate(R.layout.fragment_home, container, false)
 
 
-        authViewModel = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
+        authTokenViewModel = ViewModelProvider(requireActivity()).get(AuthTokenViewModel::class.java)
         userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
         statusViewModel = ViewModelProvider(requireActivity()).get(UserStatusViewModel::class.java)
 
-        authViewModel.readAllData?.observe(viewLifecycleOwner, Observer { auth ->
+        authTokenViewModel.readAllData?.observe(viewLifecycleOwner, Observer { auth ->
             if (auth.isEmpty()) {
                 isTokenEmpty = 1
                 Log.d("CoroutineHomeFragAuth", "List is empty")
@@ -53,7 +52,7 @@ class HomeFragment : Fragment() {
                 )
             }
         })
-        userViewModel.readAllData?.observe(viewLifecycleOwner, Observer { user ->
+        userViewModel.readAllDataModel?.observe(viewLifecycleOwner, Observer { user ->
             if (user.isEmpty()) {
                 isUserEmpty = 1
                 Log.d("CoroutineHomFragUserDat", "List is empty")
@@ -73,11 +72,11 @@ class HomeFragment : Fragment() {
             activity?.finish()
         }
         rootView.button_logout.setOnClickListener {
-            authViewModel.deleteAuthToken()
+            authTokenViewModel.deleteAuthToken()
             Log.d("CoroutineAuth", "Successfully deleted")
             userViewModel.deleteUserData()
             Log.d("CoroutineUserData", "Successfully deleted")
-            statusViewModel.deleteStatusData()
+            statusViewModel.deleteUserStatus()
             Log.d("CoroutineStatus", "Successfully deleted")
             Toast.makeText(requireContext(), "Successfully Logged out", Toast.LENGTH_SHORT).show()
 
@@ -87,7 +86,7 @@ class HomeFragment : Fragment() {
             activity?.finish()
 
         }
-        userViewModel.readAllData?.observe(viewLifecycleOwner, Observer { user ->
+        userViewModel.readAllDataModel?.observe(viewLifecycleOwner, Observer { user ->
             if (user.isEmpty()) {
                 Log.d("HomeFragment", "User not created yet")
             } else {
