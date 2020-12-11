@@ -17,6 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.studgenie.app.data.local.tokenDatabase.AuthTokenViewModel
 import com.studgenie.app.data.local.userDetailsDatabase.UserViewModel
 import com.studgenie.app.data.local.userStatusDatabase.UserStatusViewModel
+import com.studgenie.app.ui.main.activity.ExoPlayerActivity
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
     private lateinit var authTokenViewModel: AuthTokenViewModel
@@ -52,6 +54,12 @@ class HomeFragment : Fragment() {
                 )
             }
         })
+
+        rootView.videoplayButton.setOnClickListener {
+            val intent=Intent(activity,ExoPlayerActivity::class.java)
+            startActivity(intent)
+        }
+
         userViewModel.readAllDataModel?.observe(viewLifecycleOwner, Observer { user ->
             if (user.isEmpty()) {
                 isUserEmpty = 1
