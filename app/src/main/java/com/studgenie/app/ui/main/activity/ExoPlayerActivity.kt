@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.exoplayer2.DefaultLoadControl
+import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.LoopingMediaSource
@@ -22,6 +25,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.studgenie.app.R
 import kotlinx.android.synthetic.main.activity_exo_player.*
+import kotlinx.android.synthetic.main.custom_controller_exolayout.*
 
 class ExoPlayerActivity : AppCompatActivity() {
     lateinit var player:SimpleExoPlayer
@@ -96,6 +100,54 @@ class ExoPlayerActivity : AppCompatActivity() {
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 flag = true
             }
+        }
+
+        speed.setOnClickListener {
+            val popup=PopupMenu(this,speed)
+            popup.menuInflater.inflate(R.menu.popup_menu_exoplayer_speed,popup.menu)
+
+            popup.setOnMenuItemClickListener ( PopupMenu.OnMenuItemClickListener {
+                when(it.itemId) {
+                    R.id.pointfive->{
+                        val param=PlaybackParameters(0.5f)
+                        player.setPlaybackParameters(param)
+                    }
+
+                    R.id.pointsevenfive->{
+                        val param=PlaybackParameters(0.75f)
+                        player.setPlaybackParameters(param)
+                    }
+                    R.id.one ->
+                    {
+
+                        val param=PlaybackParameters(1f)
+                        player.setPlaybackParameters(param)
+                    }
+                    R.id.onepointtwofive ->
+                    {
+
+                        val param=PlaybackParameters(1.25f)
+                        player.setPlaybackParameters(param)
+                    }
+                    R.id.onepointfive ->
+                    {
+
+                        val param=PlaybackParameters(1.5f)
+                        player.setPlaybackParameters(param)
+                    }
+
+                    R.id.onepointsevenfive->{
+                        val param=PlaybackParameters(1.75f)
+                        player.setPlaybackParameters(param)
+                    }
+                    R.id.two->{
+                        val param=PlaybackParameters(2f)
+                        player.setPlaybackParameters(param)
+                    }
+                }
+                true
+            } )
+            popup.show()
         }
 
 
